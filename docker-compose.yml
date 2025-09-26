@@ -1,0 +1,23 @@
+services:
+  jira:
+    image: atlassian/jira-software:latest
+    container_name: jira
+    ports:
+      - "8080:8080"
+    volumes:
+      - jiradata:/var/atlassian/application-data/jira
+    environment:
+      JIRA_HOME: /var/atlassian/application-data/jira
+      JVM_MINIMUM_MEMORY: 512m
+      JVM_MAXIMUM_MEMORY: 2048m
+
+  postgresql:
+    image: postgresql
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  jiradata:
+  postgresql_data:
