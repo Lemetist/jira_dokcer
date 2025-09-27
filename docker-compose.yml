@@ -2,21 +2,35 @@ services:
   jira:
     image: atlassian/jira-software:latest
     container_name: jira
+    depends_on:
+      - postgresql
     ports:
       - "8080:8080"
     volumes:
       - jiradata:/var/atlassian/application-data/jira
     environment:
-      JIRA_HOME: /var/atlassian/application-data/jira
       JVM_MINIMUM_MEMORY: 512m
       JVM_MAXIMUM_MEMORY: 2048m
+      ATL_JDBC_URL: jdbc:postgresql://postgresql:5432/jiradb
+      ATL_JDBC_USER: jiradbuser
+      ATL_JDBC_PASSWORD: strongpassword
+      ATL_DB_TYPE: postgres72
+      ATL_DB_DRIVER: org.postgresql.Driver
 
   postgresql:
-    image: postgresql
+    image: postgres:15
+    container_name: postgresql
     ports:
       - "5432:5432"
     volumes:
       - postgresql_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: jiradb
+      POSTGRES_USER: jiradbuser
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_ENCODING: UNICODE
+      POSTGRES_COLLATE: C
+      POSTGRES_COLLATE_TYPE: C
 
 volumes:
   jiradata:
